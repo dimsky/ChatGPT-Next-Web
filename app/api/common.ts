@@ -63,6 +63,7 @@ export async function requestOpenai(req: NextRequest) {
       cache: "no-store",
     };
 
+    console.log("[GPT-4]", customOptions);
     try {
       const res = await fetch(
         `${XAI_API_HOST}ai/completions/gpt-4`,
@@ -79,7 +80,7 @@ export async function requestOpenai(req: NextRequest) {
         headers: newHeaders,
       });
     } catch (e) {
-      console.log("error: ", e);
+      console.log("[Fetch Error]", e);
     } finally {
       clearTimeout(timeoutId);
     }
