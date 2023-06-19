@@ -5,6 +5,8 @@ const DEFAULT_PROTOCOL = "https";
 const PROTOCOL = process.env.PROTOCOL ?? DEFAULT_PROTOCOL;
 const BASE_URL = process.env.BASE_URL ?? OPENAI_URL;
 const DISABLE_GPT4 = !!process.env.DISABLE_GPT4;
+const XAI_API_TOKEN = process.env.XAI_API_TOKEN ?? "";
+const XAI_API_HOST = process.env.XAI_API_HOST ?? "";
 
 export async function requestOpenai(req: NextRequest) {
   const controller = new AbortController();
@@ -45,6 +47,42 @@ export async function requestOpenai(req: NextRequest) {
     body: req.body,
     signal: controller.signal,
   };
+  const clonedBody = await req.text();
+  fetchOptions.body = clonedBody;
+
+  const jsonBody = JSON.parse(clonedBody);
+  if (jsonBody.model === "gpt-4") {
+    let customOptions: RequestInit = {
+      headers: {
+        "Content-Type": "application/json",
+        "x-token": XAI_API_TOKEN,
+      },
+      body: fetchOptions.body,
+      method: req.method,
+      cache: "no-store",
+    };
+
+    try {
+      const res = await fetch(
+        `${XAI_API_HOST}ai/completions/gpt-4`,
+        customOptions,
+      );
+      const newHeaders = new Headers(res.headers);
+      newHeaders.delete("www-authenticate");
+      // to disbale ngnix buffering
+      newHeaders.set("X-Accel-Buffering", "no");
+
+      return new Response(res.body, {
+        status: res.status,
+        statusText: res.statusText,
+        headers: newHeaders,
+      });
+    } catch (e) {
+      console.log("error: ", e);
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  }
 
   // #1815 try to refuse gpt4 request
   if (DISABLE_GPT4 && req.body) {
