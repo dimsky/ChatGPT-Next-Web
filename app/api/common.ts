@@ -50,7 +50,7 @@ export async function requestOpenai(req: NextRequest) {
   const clonedBody = await req.text();
   fetchOptions.body = clonedBody;
 
-  console.log("clonedbody--", clonedBody);
+  console.log("[Test Body]", clonedBody);
   const jsonBody = JSON.parse(clonedBody);
   if (jsonBody.model === "gpt-4") {
     let customOptions: RequestInit = {
