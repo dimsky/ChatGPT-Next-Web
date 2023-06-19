@@ -74,7 +74,12 @@ export async function requestOpenai(req: NextRequest) {
       // to disbale ngnix buffering
       newHeaders.set("X-Accel-Buffering", "no");
 
-      console.log("[GPT-4 response]", res, XAI_API_HOST, XAI_API_TOKEN);
+      console.log(
+        "[GPT-4 response]",
+        res.body,
+        `${XAI_API_HOST}ai/completions/gpt-4`,
+        XAI_API_TOKEN,
+      );
       return new Response(res.body, {
         status: res.status,
         statusText: res.statusText,
