@@ -51,46 +51,48 @@ export async function requestOpenai(req: NextRequest) {
   fetchOptions.body = clonedBody;
 
   console.log("[Test Body]", clonedBody);
-  const jsonBody = JSON.parse(clonedBody);
-  if (jsonBody.model === "gpt-4") {
-    let customOptions: RequestInit = {
-      headers: {
-        "Content-Type": "application/json",
-        "x-token": XAI_API_TOKEN,
-      },
-      body: fetchOptions.body,
-      method: req.method,
-      cache: "no-store",
-    };
+  if (clonedBody && clonedBody !== "") {
+    const jsonBody = JSON.parse(clonedBody);
+    if (jsonBody.model === "gpt-4") {
+      let customOptions: RequestInit = {
+        headers: {
+          "Content-Type": "application/json",
+          "x-token": XAI_API_TOKEN,
+        },
+        body: fetchOptions.body,
+        method: req.method,
+        cache: "no-store",
+      };
 
-    console.log("[GPT-4]", customOptions);
-    try {
-      const res = await fetch(
-        `${XAI_API_HOST}ai/completions/gpt-4`,
-        customOptions,
-      );
-      const newHeaders = new Headers(res.headers);
-      newHeaders.delete("www-authenticate");
-      // to disbale ngnix buffering
-      newHeaders.set("X-Accel-Buffering", "no");
+      console.log("[GPT-4]", customOptions);
+      try {
+        const res = await fetch(
+          `${XAI_API_HOST}ai/completions/gpt-4`,
+          customOptions,
+        );
+        const newHeaders = new Headers(res.headers);
+        newHeaders.delete("www-authenticate");
+        // to disbale ngnix buffering
+        newHeaders.set("X-Accel-Buffering", "no");
 
-      console.log(
-        "[GPT-4 response]",
-        res.body,
-        res.status,
-        res.statusText,
-        newHeaders,
-        `${XAI_API_HOST}ai/completions/gpt-4`,
-      );
-      return new Response(res.body, {
-        status: res.status,
-        statusText: res.statusText,
-        headers: newHeaders,
-      });
-    } catch (e) {
-      console.log("[Fetch Error]", e);
-    } finally {
-      clearTimeout(timeoutId);
+        console.log(
+          "[GPT-4 response]",
+          res.body,
+          res.status,
+          res.statusText,
+          newHeaders,
+          `${XAI_API_HOST}ai/completions/gpt-4`,
+        );
+        return new Response(res.body, {
+          status: res.status,
+          statusText: res.statusText,
+          headers: newHeaders,
+        });
+      } catch (e) {
+        console.log("[Fetch Error]", e);
+      } finally {
+        clearTimeout(timeoutId);
+      }
     }
   }
 
