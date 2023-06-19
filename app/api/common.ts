@@ -78,7 +78,6 @@ export async function requestOpenai(req: NextRequest) {
         "[GPT-4 response]",
         res.body,
         `${XAI_API_HOST}ai/completions/gpt-4`,
-        XAI_API_TOKEN,
       );
       return new Response(res.body, {
         status: res.status,
