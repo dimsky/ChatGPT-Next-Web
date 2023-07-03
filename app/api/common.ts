@@ -53,7 +53,14 @@ export async function requestOpenai(req: NextRequest) {
   console.log("[Test Body]", clonedBody);
   if (clonedBody && clonedBody !== "") {
     const jsonBody = JSON.parse(clonedBody);
-    if (jsonBody.model === "gpt-4") {
+    let modelPath = "";
+    if (["gpt-4", "gpt-3.5-turbo"].includes(jsonBody.model)) {
+      let modelPath = "";
+      if (jsonBody.model == "gpt-4") {
+        modelPath = "gpt-4";
+      } else {
+        modelPath = "gpt-35";
+      }
       let customOptions: RequestInit = {
         headers: {
           "Content-Type": "application/json",
@@ -64,10 +71,10 @@ export async function requestOpenai(req: NextRequest) {
         cache: "no-store",
       };
 
-      console.log("[GPT-4]", customOptions);
+      // console.log("[GPT-4]", customOptions);
       try {
         const res = await fetch(
-          `${XAI_API_HOST}ai/completions/gpt-4`,
+          `${XAI_API_HOST}ai/completions/${modelPath}`,
           customOptions,
         );
         const newHeaders = new Headers(res.headers);
@@ -75,14 +82,14 @@ export async function requestOpenai(req: NextRequest) {
         // to disbale ngnix buffering
         newHeaders.set("X-Accel-Buffering", "no");
 
-        console.log(
-          "[GPT-4 response]",
-          res.body,
-          res.status,
-          res.statusText,
-          newHeaders,
-          `${XAI_API_HOST}ai/completions/gpt-4`,
-        );
+        // console.log(
+        //   "[GPT-4 response]",
+        //   res.body,
+        //   res.status,
+        //   res.statusText,
+        //   newHeaders,
+        //   `${XAI_API_HOST}ai/completions/gpt-4`,
+        // );
         return new Response(res.body, {
           status: res.status,
           statusText: res.statusText,
