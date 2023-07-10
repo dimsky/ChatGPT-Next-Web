@@ -8,6 +8,7 @@ import { copyToClipboard, downloadAs, useMobileScreen } from "../utils";
 import CopyIcon from "../icons/copy.svg";
 import LoadingIcon from "../icons/three-dots.svg";
 import ChatGptIcon from "../icons/chatgpt.png";
+import XslLogoIcon from "../icons/xsl-logo.png";
 import ShareIcon from "../icons/share.svg";
 import BotIcon from "../icons/bot.png";
 
@@ -429,7 +430,8 @@ export function ImagePreviewer(props: {
         <div className={styles["chat-info"]}>
           <div className={styles["logo"] + " no-dark"}>
             <NextImage
-              src={ChatGptIcon.src}
+              // src={ChatGptIcon.src}
+              src={XslLogoIcon.src}
               alt="logo"
               width={50}
               height={50}
@@ -437,10 +439,8 @@ export function ImagePreviewer(props: {
           </div>
 
           <div>
-            <div className={styles["main-title"]}>ChatGPT Next Web</div>
-            <div className={styles["sub-title"]}>
-              github.com/Yidadaa/ChatGPT-Next-Web
-            </div>
+            <div className={styles["main-title"]}>Xingshulin ChatGPT</div>
+            <div className={styles["sub-title"]}>您的专属 AI 助手</div>
             <div className={styles["icons"]}>
               <ExportAvatar avatar={config.avatar} />
               <span className={styles["icon-space"]}>&</span>
