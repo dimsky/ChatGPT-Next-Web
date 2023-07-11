@@ -13,7 +13,7 @@ export const CN_MASKS: BuiltinMask[] = [
       },
     ],
     modelConfig: {
-      model: "gpt-3.5-turbo",
+      model: "gpt-4",
       temperature: 0,
       max_tokens: 3000,
       presence_penalty: 0,
